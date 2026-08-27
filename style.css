@@ -1,13 +1,13 @@
 /* ==========================================================================
-   MINIMAL PURE MIE AYAM SCROLL GALLERY
+   MOBILE-FIRST MIE AYAM SCROLL & ZOOM GALLERY
    ========================================================================== */
 :root {
-  --bg-dark: #090a0f;
+  --bg-deep: #050508;
   --primary: #f59e0b;
-  --accent: #ef4444;
+  --accent-fire: #ef4444;
   --text-main: #ffffff;
   --text-muted: #94a3b8;
-  --glass-bg: rgba(15, 17, 23, 0.65);
+  --glass-dark: rgba(12, 14, 20, 0.72);
   --glass-border: rgba(255, 255, 255, 0.12);
   --font-title: 'Outfit', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
@@ -17,97 +17,177 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: var(--bg-dark);
+  background-color: var(--bg-deep);
   font-family: var(--font-body);
   color: var(--text-main);
-  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* ==========================================================================
-   FLOATING MINIMAL HEADER
+   AMBIENT BACKDROP (DESKTOP)
    ========================================================================== */
-.floating-header {
+.ambient-backdrop {
   position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  inset: -40px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(50px) brightness(0.25);
+  transform: scale(1.1);
+  z-index: 0;
+  transition: background-image 0.8s ease;
+  pointer-events: none;
 }
 
-.brand-pill {
+/* ==========================================================================
+   MOBILE-FIRST CONTAINER FRAME
+   ========================================================================== */
+.mobile-frame {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 440px;
+  height: 100vh;
+  max-height: 920px;
+  background-color: #08090d;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+@media (min-width: 769px) {
+  .mobile-frame {
+    height: calc(100vh - 40px);
+    border-radius: 36px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* ==========================================================================
+   TOP FLOATING BAR
+   ========================================================================== */
+.mobile-top-bar {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  right: 16px;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+
+.brand-badge {
+  pointer-events: auto;
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--glass-bg);
+  background: var(--glass-dark);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
-  padding: 8px 18px;
+  padding: 7px 15px;
   border-radius: 9999px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 }
 
 .emoji {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
 }
 
-.brand-title {
+.brand-badge .title {
   font-family: var(--font-title);
   font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: -0.3px;
+  font-size: 0.95rem;
   color: #fff;
+  letter-spacing: -0.3px;
 }
 
-.slide-indicator {
-  background: var(--glass-bg);
+.top-controls {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.zoom-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--glass-dark);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
-  padding: 8px 14px;
+  padding: 7px 13px;
   border-radius: 9999px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s ease;
+}
+
+.zoom-status-pill:hover, .zoom-status-pill.is-zoomed {
+  background: var(--primary);
+  color: #07080a;
+  border-color: var(--primary);
+}
+
+.counter-badge {
+  background: var(--glass-dark);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  padding: 7px 13px;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
   color: var(--primary);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 }
 
 /* ==========================================================================
    FULLSCREEN SNAP CONTAINER
    ========================================================================== */
 .snap-container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
 }
 
 .snap-container::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  display: none;
 }
 
 .snap-slide {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: always;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
+/* ==========================================================================
+   IMAGE WRAPPER & ZOOM IN / ZOOM OUT STYLES
+   ========================================================================== */
 .image-wrapper {
   width: 100%;
   height: 100%;
@@ -115,74 +195,113 @@ html, body {
   top: 0;
   left: 0;
   overflow: hidden;
-  background-color: #07070a;
+  cursor: zoom-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
 }
 
-.image-wrapper img {
+.image-wrapper.zoomed {
+  cursor: zoom-out;
+}
+
+.zoomable-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
   transform: scale(1);
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center center;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
 }
 
-.snap-slide.active .image-wrapper img {
-  transform: scale(1.02);
+/* Automatic Smooth Cinematic Breathing Zoom when active */
+.snap-slide.active:not(.is-zoomed-slide) .zoomable-img {
+  animation: cinematicSlowZoom 8s alternate infinite ease-in-out;
 }
 
-/* Vignette & Bottom shadow for readable text */
+@keyframes cinematicSlowZoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.08);
+  }
+}
+
+/* Manual Interactive Zoom In (2.1x) */
+.snap-slide.is-zoomed-slide .zoomable-img {
+  animation: none;
+  transform: scale(2.1);
+}
+
+/* Vignette Shadow for reading text */
 .image-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    180deg, 
-    rgba(9, 10, 15, 0.4) 0%, 
-    transparent 25%, 
-    transparent 65%, 
-    rgba(9, 10, 15, 0.85) 100%
+    180deg,
+    rgba(7, 8, 12, 0.45) 0%,
+    transparent 20%,
+    transparent 60%,
+    rgba(7, 8, 12, 0.92) 100%
   );
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+/* Fade overlay & captions when user zooms in for full photo view */
+.snap-slide.is-zoomed-slide .image-overlay {
+  opacity: 0.15;
+}
+
+.snap-slide.is-zoomed-slide .slide-caption {
+  opacity: 0;
+  transform: translate(-50%, 30px);
   pointer-events: none;
 }
 
 /* ==========================================================================
-   SLIDE CAPTION & SOURCE
+   SLIDE CAPTION & SOURCE CREDIT
    ========================================================================== */
 .slide-caption {
   position: absolute;
-  bottom: 35px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%;
-  max-width: 650px;
-  background: var(--glass-bg);
+  width: calc(100% - 32px);
+  max-width: 390px;
+  background: var(--glass-dark);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
-  padding: 16px 22px;
+  padding: 15px 18px;
   border-radius: 20px;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
   text-align: center;
-  z-index: 10;
-  transition: transform 0.4s ease, opacity 0.4s ease;
+  z-index: 40;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
 }
 
 .slide-title {
   font-family: var(--font-title);
-  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-size: 1.1rem;
   font-weight: 700;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   color: #fff;
   letter-spacing: -0.3px;
+  line-height: 1.25;
 }
 
 .slide-source {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   flex-wrap: wrap;
 }
 
@@ -198,24 +317,24 @@ html, body {
 }
 
 /* ==========================================================================
-   NAVIGATION DOTS (SIDE)
+   SIDE DOTS (INSIDE MOBILE FRAME)
    ========================================================================== */
-.side-dots {
-  position: fixed;
-  right: 24px;
+.side-dots-inside {
+  position: absolute;
+  right: 14px;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 100;
+  z-index: 50;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.3);
   border: none;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -224,57 +343,58 @@ html, body {
 
 .dot.active {
   background: var(--primary);
-  transform: scale(1.4);
-  box-shadow: 0 0 12px var(--primary);
+  height: 18px;
+  border-radius: 9999px;
+  box-shadow: 0 0 10px var(--primary);
 }
 
 .dot:hover:not(.active) {
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 /* ==========================================================================
-   NAVIGATION ARROWS
+   NAV ARROWS (INSIDE FRAME)
    ========================================================================== */
 .nav-arrow {
-  position: fixed;
-  right: 18px;
-  width: 36px;
-  height: 36px;
+  position: absolute;
+  right: 10px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: var(--glass-bg);
+  background: var(--glass-dark);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   color: #fff;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 100;
+  z-index: 50;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
 .nav-prev {
-  top: calc(50% - 90px);
+  top: calc(50% - 70px);
 }
 
 .nav-next {
-  top: calc(50% + 70px);
+  top: calc(50% + 55px);
 }
 
 .nav-arrow:hover {
   background: var(--primary);
-  color: #090a0f;
+  color: #07080a;
   transform: scale(1.1);
 }
 
 /* ==========================================================================
-   SCROLL HINT
+   HINTS (SCROLL & ZOOM)
    ========================================================================== */
 .scroll-hint {
-  position: fixed;
+  position: absolute;
   bottom: 95px;
   left: 50%;
   transform: translateX(-50%);
@@ -282,44 +402,57 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.7);
   pointer-events: none;
-  z-index: 50;
+  z-index: 45;
   animation: floatDown 2s infinite ease-in-out;
   transition: opacity 0.5s ease;
 }
 
 .scroll-hint i {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--primary);
+}
+
+.zoom-hint {
+  position: absolute;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  z-index: 45;
+  transition: opacity 0.5s ease;
 }
 
 @keyframes floatDown {
   0%, 100% { transform: translate(-50%, 0); opacity: 0.8; }
-  50% { transform: translate(-50%, 8px); opacity: 0.3; }
+  50% { transform: translate(-50%, 6px); opacity: 0.3; }
 }
 
-.scroll-hint.hidden {
-  opacity: 0;
-  visibility: hidden;
+.hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
 /* ==========================================================================
-   RESPONSIVE (MOBILE)
+   RESPONSIVE OPTIMIZATIONS
    ========================================================================== */
-@media (max-width: 768px) {
-  .side-dots, .nav-arrow {
-    display: none;
+@media (max-width: 480px) {
+  .mobile-frame {
+    border-radius: 0;
+    border: none;
+    max-height: 100vh;
   }
   
-  .slide-caption {
-    bottom: 25px;
-    padding: 14px 18px;
-    width: 92%;
-  }
-
-  .slide-title {
-    font-size: 1.05rem;
+  .nav-arrow {
+    display: none;
   }
 }
