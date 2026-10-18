@@ -268,7 +268,7 @@ html, body {
    ========================================================================== */
 .slide-caption {
   position: absolute;
-  bottom: 24px;
+  bottom: 34px;
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 32px);
@@ -395,7 +395,7 @@ html, body {
    ========================================================================== */
 .scroll-hint {
   position: absolute;
-  bottom: 95px;
+  bottom: 105px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -440,6 +440,35 @@ html, body {
 .hidden {
   opacity: 0 !important;
   visibility: hidden !important;
+}
+
+/* ==========================================================================
+   FOOTER (POWERED BY)
+   ========================================================================== */
+.mobile-footer {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  z-index: 45;
+  pointer-events: auto;
+  user-select: auto;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+.mobile-footer a {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.mobile-footer a:hover {
+  color: var(--primary);
 }
 
 /* ==========================================================================
