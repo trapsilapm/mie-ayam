@@ -10,11 +10,36 @@ document.addEventListener('DOMContentLoaded', () => {
   const zoomToggleBtn = document.getElementById('zoomToggleBtn');
   const zoomIcon = document.getElementById('zoomIcon');
   const zoomText = document.getElementById('zoomText');
+  const viewModeBtn = document.getElementById('viewModeBtn');
+  const viewModeIcon = document.getElementById('viewModeIcon');
+  const viewModeText = document.getElementById('viewModeText');
+  const mobileFrame = document.querySelector('.mobile-frame');
   const ambientBackdrop = document.getElementById('ambientBackdrop');
 
   const totalSlides = slides.length;
   let currentIndex = 0;
   let isZoomed = false;
+  let isFillMode = false;
+
+  // Toggle View Mode (Utuh / Fit vs Penuh / Fill)
+  if (viewModeBtn && mobileFrame) {
+    viewModeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isFillMode = !isFillMode;
+      mobileFrame.classList.toggle('mode-fill', isFillMode);
+      viewModeBtn.classList.toggle('active', isFillMode);
+      if (isFillMode) {
+        viewModeText.textContent = 'Penuh';
+        viewModeIcon.className = 'fa-solid fa-compress';
+        viewModeBtn.setAttribute('title', 'Sedang mode Layar Penuh. Klik untuk kembali ke mode Utuh');
+      } else {
+        viewModeText.textContent = 'Utuh';
+        viewModeIcon.className = 'fa-solid fa-expand';
+        viewModeBtn.setAttribute('title', 'Sedang mode Tampilan Utuh. Klik untuk coba mode Layar Penuh');
+      }
+      resetZoom();
+    });
+  }
 
   // Generate Navigation Dots
   slides.forEach((_, idx) => {

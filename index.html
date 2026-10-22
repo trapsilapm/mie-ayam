@@ -31,6 +31,10 @@
       </div>
       
       <div class="top-controls">
+        <button class="mode-toggle-pill" id="viewModeBtn" title="Ganti mode: Tampilan Utuh / Penuh">
+          <i class="fa-solid fa-expand" id="viewModeIcon"></i>
+          <span id="viewModeText">Utuh</span>
+        </button>
         <div class="zoom-status-pill" id="zoomToggleBtn" title="Klik / Double-tap untuk zoom foto">
           <i class="fa-solid fa-magnifying-glass-plus" id="zoomIcon"></i>
           <span id="zoomText">Zoom</span>
@@ -57,11 +61,20 @@
       
       <!-- Slide 1 -->
       <section class="snap-slide active" data-index="1">
-        <div class="image-wrapper" id="wrap-1">
-          <img src="images/mie 1.jpg" alt="Mie Ayam Frozen Praktis Spesial" class="zoomable-img" loading="eager">
-          <div class="image-overlay"></div>
+        <div class="slide-backdrop" style="background-image: url('images/mie 1.jpg');"></div>
+        <div class="slide-vignette"></div>
+        
+        <div class="image-stage">
+          <div class="image-wrapper" id="wrap-1">
+            <img src="images/mie 1.jpg" alt="Mie Ayam Frozen Praktis Spesial" class="zoomable-img" loading="eager">
+            <div class="image-badges">
+              <span class="badge-item"><i class="fa-solid fa-bowl-rice"></i> Porsi Pas</span>
+            </div>
+          </div>
         </div>
+
         <div class="slide-caption">
+          <div class="slide-pill-badge">Spesial Gurih</div>
           <h2 class="slide-title">Mie Ayam Frozen Praktis Spesial</h2>
           <div class="slide-source">
             <span>Sumber:</span>
@@ -74,11 +87,20 @@
 
       <!-- Slide 2 -->
       <section class="snap-slide" data-index="2">
-        <div class="image-wrapper" id="wrap-2">
-          <img src="images/mie 2.jpg" alt="Mie Ayam Khas Jogja Kuah Kental" class="zoomable-img" loading="lazy">
-          <div class="image-overlay"></div>
+        <div class="slide-backdrop" style="background-image: url('images/mie 2.jpg');"></div>
+        <div class="slide-vignette"></div>
+
+        <div class="image-stage">
+          <div class="image-wrapper" id="wrap-2">
+            <img src="images/mie 2.jpg" alt="Mie Ayam Khas Jogja Kuah Kental" class="zoomable-img" loading="lazy">
+            <div class="image-badges">
+              <span class="badge-item"><i class="fa-solid fa-fire"></i> Khas Jogja</span>
+            </div>
+          </div>
         </div>
+
         <div class="slide-caption">
+          <div class="slide-pill-badge">Kuah Kental Manis</div>
           <h2 class="slide-title">Mie Ayam Khas Jogja Kuah Kental</h2>
           <div class="slide-source">
             <span>Sumber:</span>
@@ -91,11 +113,20 @@
 
       <!-- Slide 3 -->
       <section class="snap-slide" data-index="3">
-        <div class="image-wrapper" id="wrap-3">
-          <img src="images/mie 3.jpg" alt="Mie Ayam Komplit Pangsit & Bakso" class="zoomable-img" loading="lazy">
-          <div class="image-overlay"></div>
+        <div class="slide-backdrop" style="background-image: url('images/mie 3.jpg');"></div>
+        <div class="slide-vignette"></div>
+
+        <div class="image-stage">
+          <div class="image-wrapper" id="wrap-3">
+            <img src="images/mie 3.jpg" alt="Mie Ayam Komplit Pangsit & Bakso" class="zoomable-img" loading="lazy">
+            <div class="image-badges">
+              <span class="badge-item"><i class="fa-solid fa-star"></i> Komplit</span>
+            </div>
+          </div>
         </div>
+
         <div class="slide-caption">
+          <div class="slide-pill-badge">Topping Melimpah</div>
           <h2 class="slide-title">Mie Ayam Komplit Pangsit & Bakso</h2>
           <div class="slide-source">
             <span>Sumber:</span>
@@ -108,11 +139,20 @@
 
       <!-- Slide 4 -->
       <section class="snap-slide" data-index="4">
-        <div class="image-wrapper" id="wrap-4">
-          <img src="images/mie 4.jpg" alt="Mie Ayam Khas Semarang Gurih Mantap" class="zoomable-img" loading="lazy">
-          <div class="image-overlay"></div>
+        <div class="slide-backdrop" style="background-image: url('images/mie 4.jpg');"></div>
+        <div class="slide-vignette"></div>
+
+        <div class="image-stage">
+          <div class="image-wrapper" id="wrap-4">
+            <img src="images/mie 4.jpg" alt="Mie Ayam Khas Semarang Gurih Mantap" class="zoomable-img" loading="lazy">
+            <div class="image-badges">
+              <span class="badge-item"><i class="fa-solid fa-cookie"></i> Mangkok Pangsit</span>
+            </div>
+          </div>
         </div>
+
         <div class="slide-caption">
+          <div class="slide-pill-badge">Khas Semarang</div>
           <h2 class="slide-title">Mie Ayam Khas Semarang Gurih Mantap</h2>
           <div class="slide-source">
             <span>Sumber:</span>
@@ -125,11 +165,20 @@
 
       <!-- Slide 5 -->
       <section class="snap-slide" data-index="5">
-        <div class="image-wrapper" id="wrap-5">
-          <img src="images/mie 5.jpg" alt="Mie Ayam Jamur Kancing Komplet" class="zoomable-img" loading="lazy">
-          <div class="image-overlay"></div>
+        <div class="slide-backdrop" style="background-image: url('images/mie 5.jpg');"></div>
+        <div class="slide-vignette"></div>
+
+        <div class="image-stage">
+          <div class="image-wrapper" id="wrap-5">
+            <img src="images/mie 5.jpg" alt="Mie Ayam Jamur Kancing Komplet" class="zoomable-img" loading="lazy">
+            <div class="image-badges">
+              <span class="badge-item"><i class="fa-solid fa-seedling"></i> Jamur Komplet</span>
+            </div>
+          </div>
         </div>
+
         <div class="slide-caption">
+          <div class="slide-pill-badge">Resep Komplit</div>
           <h2 class="slide-title">Mie Ayam Jamur Kancing Komplet</h2>
           <div class="slide-source">
             <span>Sumber:</span>

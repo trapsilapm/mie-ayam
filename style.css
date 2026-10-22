@@ -120,7 +120,7 @@ html, body {
   gap: 8px;
 }
 
-.zoom-status-pill {
+.mode-toggle-pill, .zoom-status-pill {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -128,17 +128,24 @@ html, body {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
-  padding: 7px 13px;
+  padding: 7px 12px;
   border-radius: 9999px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
   transition: all 0.25s ease;
+  font-family: inherit;
 }
 
-.zoom-status-pill:hover, .zoom-status-pill.is-zoomed {
+.mode-toggle-pill:hover, .zoom-status-pill:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.zoom-status-pill.is-zoomed, .mode-toggle-pill.active {
   background: var(--primary);
   color: #07080a;
   border-color: var(--primary);
@@ -176,90 +183,163 @@ html, body {
 .snap-slide {
   width: 100%;
   height: 100%;
+  min-height: 100%;
+  max-height: 100%;
   scroll-snap-align: start;
   scroll-snap-stop: always;
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 74px 16px 30px;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 /* ==========================================================================
-   IMAGE WRAPPER & ZOOM IN / ZOOM OUT STYLES
+   SLIDE AMBIENT BACKDROP (Mengisi ruang dengan warna senada yang estetik)
    ========================================================================== */
-.image-wrapper {
-  width: 100%;
-  height: 100%;
+.slide-backdrop {
   position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  cursor: zoom-in;
+  inset: -30px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(38px) brightness(0.28) saturate(1.35);
+  transform: scale(1.18);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.slide-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center 48%, rgba(6, 7, 10, 0.15) 30%, rgba(6, 7, 10, 0.85) 100%),
+              linear-gradient(180deg, rgba(8, 9, 13, 0.6) 0%, transparent 20%, transparent 70%, rgba(8, 9, 13, 0.9) 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   IMAGE STAGE & WRAPPER (TAMPILAN UTUH / FIT - TIDAK DI-CROP, TIDAK BLUR)
+   ========================================================================== */
+.image-stage {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #000;
+  padding: 6px 0;
+}
+
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  overflow: hidden;
+  background: rgba(10, 12, 16, 0.55);
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  cursor: zoom-in;
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.35s ease;
 }
 
 .image-wrapper.zoomed {
   cursor: zoom-out;
 }
 
+/* Floating Badges pada foto */
+.image-badges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 5;
+  display: flex;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.badge-item {
+  background: rgba(10, 12, 16, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.badge-item i {
+  color: var(--primary);
+}
+
+/* FOTO UTUH & TAJAM */
 .zoomable-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   transform: scale(1);
   transform-origin: center center;
-  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1);
   will-change: transform;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.45));
 }
 
-/* Automatic Smooth Cinematic Breathing Zoom when active */
-.snap-slide.active:not(.is-zoomed-slide) .zoomable-img {
-  animation: cinematicSlowZoom 8s alternate infinite ease-in-out;
-}
-
-@keyframes cinematicSlowZoom {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1.08);
-  }
-}
-
-/* Manual Interactive Zoom In (2.1x) */
+/* Manual Zoom In Saat Diklik / Toggle (1.65x - Tajam tanpa pecah berlebihan) */
 .snap-slide.is-zoomed-slide .zoomable-img {
-  animation: none;
-  transform: scale(2.1);
+  transform: scale(1.65);
 }
 
-/* Vignette Shadow for reading text */
-.image-overlay {
+/* Mode Penuh (Fill Layar) jika pengguna sengaja mengaktifkannya */
+.mobile-frame.mode-fill .image-stage {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(7, 8, 12, 0.45) 0%,
-    transparent 20%,
-    transparent 60%,
-    rgba(7, 8, 12, 0.92) 100%
-  );
-  pointer-events: none;
-  transition: opacity 0.4s ease;
+  max-height: 100%;
+  margin: 0;
+  z-index: 5;
 }
 
-/* Fade overlay & captions when user zooms in for full photo view */
-.snap-slide.is-zoomed-slide .image-overlay {
-  opacity: 0.15;
+.mobile-frame.mode-fill .image-wrapper {
+  max-width: 100%;
+  max-height: 100%;
+  height: 100%;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  background: transparent;
 }
 
+.mobile-frame.mode-fill .zoomable-img {
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.mobile-frame.mode-fill .slide-caption {
+  position: absolute;
+  bottom: 34px;
+  z-index: 25;
+}
+
+/* Sembunyikan caption saat zoomed in untuk inspeksi penuh */
 .snap-slide.is-zoomed-slide .slide-caption {
   opacity: 0;
-  transform: translate(-50%, 30px);
+  transform: translateY(20px);
   pointer-events: none;
 }
 
@@ -267,22 +347,35 @@ html, body {
    SLIDE CAPTION & SOURCE CREDIT
    ========================================================================== */
 .slide-caption {
-  position: absolute;
-  bottom: 34px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 32px);
-  max-width: 390px;
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 400px;
   background: var(--glass-dark);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
-  padding: 15px 18px;
-  border-radius: 20px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+  padding: 12px 16px;
+  border-radius: 18px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.6);
   text-align: center;
-  z-index: 40;
-  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.35s ease;
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+
+.slide-pill-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--primary);
+  background: rgba(255, 179, 0, 0.12);
+  border: 1px solid rgba(255, 179, 0, 0.3);
+  padding: 2px 10px;
+  border-radius: 9999px;
+  margin-bottom: 5px;
 }
 
 .slide-title {
@@ -395,19 +488,25 @@ html, body {
    ========================================================================== */
 .scroll-hint {
   position: absolute;
-  bottom: 105px;
+  bottom: 132px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 4px;
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.7);
+  gap: 6px;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(10, 12, 16, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 4px 12px;
+  border-radius: 9999px;
   pointer-events: none;
   z-index: 45;
   animation: floatDown 2s infinite ease-in-out;
   transition: opacity 0.5s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .scroll-hint i {
